@@ -30,16 +30,16 @@
                 </div>
             </div>
         </div>
-
+                 
         <!-- 2.0 导航条 -->
         <div class="head-nav">
             <div class="section">
                 <div id="menu2" class="nav-box menuhd">
                     <ul>
                         <li class="index">
-                            <a href="#" class="">
+                            <router-link to="/index">
                                 <span class="out" style="top: 0px;">首页</span>
-                            </a>
+                           </router-link>
                         </li>
                         <li class="news">
                             <a href="#" class="">
@@ -79,6 +79,8 @@
             </div>
         </div>
     </div>
+    <!-- 路由匹配到的组件将渲染在这里 -->
+     <router-view></router-view> 
     <div class="footer">
                 <div class="section">
                     <div class="foot-nav">
@@ -115,7 +117,7 @@
 
 <script>
 // 引入jQuery
-import $ from "jquery";
+import $ from "jquery"; 
 export default {
   name: "app"
 };
@@ -148,11 +150,13 @@ $(document).ready(function() {
 </script>
 
 <style>
-
 @import url("./assets/statics/site/css/style.css");
 @import url("./assets/lib/css/style.css");
 
 #menu2 {
   background-image: none;
+}
+body {
+  background-color: transparent;
 }
 </style>
