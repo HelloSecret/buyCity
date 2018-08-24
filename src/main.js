@@ -5,8 +5,12 @@ import VueRouter from "vue-router"
 // 链接组建
 import Index from './components/01.index.vue'
 
+import ElementUI from 'element-ui';
+import '../node_modules/element-ui/lib/theme-chalk/index.css';
+
 // 如果使用模块化机制编程，导入Vue和VueRouter，要调用 Vue.use(VueRouter)
 Vue.use(VueRouter)
+Vue.use(ElementUI);
 
 // 定义路由
 let routes = [
@@ -17,7 +21,7 @@ let routes = [
   },
   {
     path: '/index',
-    component: Index
+    component: Index 
   }
 ]
 
