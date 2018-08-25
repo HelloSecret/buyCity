@@ -39,11 +39,18 @@
                     </div>
                     <!--幻灯片-->
                     <div class="left-705">
-                        <el-carousel indicator-position="outside">
+                        <el-carousel height="341px">
                             <el-carousel-item v-for="item in sliderlist" :key="item.id">
-                            <img :src="item.img_url" alt="">
+                            <a href="#">
+                                <img :src="item.img_url" alt="">
+                            </a>
                             </el-carousel-item>
                         </el-carousel>
+                         <!-- <el-carousel height="341px">
+                            <el-carousel-item v-for="item in sliderlist" :key="item.id">
+                                <img :src="item.img_url" alt="">
+                            </el-carousel-item>
+                            </el-carousel> -->
                     </div>
                     <!--/幻灯片-->
                     <div class="left-220">
@@ -77,22 +84,25 @@
                 <div class="wrap-box">
                     <ul class="img-list">
                         <li v-for="item in item.datas" :key="item.artID">
-                            <a href="#/site/goodsinfo/87" class="">
-                                <div class="img-box">
-                                    <img :src="item.img_url">
-                                </div>
-                                <div class="info">
-                                    <h3>{{item.artTitle}}</h3>
-                                    <p class="price">
-                                        <b>{{item.sell_price}}</b>元</p>
-                                    <p>
-                                        <strong>库存 {{item.stock_quantity}}</strong>
-                                        <span>市场价：
-                                            <s>2499</s>
-                                        </span>
-                                    </p>
-                                </div>
-                            </a>
+                            <!-- <a href="#/site/goodsinfo/87" class=""> -->
+                                <router-link :to="'/detail/'+item.artID">
+                                    <div class="img-box">
+                                        <!-- <img :src="item.img_url"> -->
+                                        <img v-lazy="item.img_url" alt="">
+                                    </div>
+                                    <div class="info">
+                                        <h3>{{item.artTitle}}</h3>
+                                        <p class="price">
+                                            <b>{{item.sell_price}}</b>元</p>
+                                        <p>
+                                            <strong>库存 {{item.stock_quantity}}</strong> 
+                                            <span>市场价：
+                                                <s>{{item.market_price}}</s>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </router-link>
+                            <!-- </a> -->
                         </li>
                     </ul>
                 </div>
@@ -105,8 +115,8 @@
 // 导入axios
 import axios from "axios";
 // 导入moment
-import moment from "moment";
-
+// import moment from "moment";
+// 暴露出去
 export default {
   name: "index",
   data: function() {
@@ -138,17 +148,17 @@ export default {
       });
   },
   // 过滤器
-  filters: {
-    //   过滤日期
-    filterDate(val) {
-      return moment(val).format("YYYY年MM月DD日");
-    }
-  }
+//   filters: {
+//     //   过滤日期
+//     filterDate(val) {
+//       return moment(val).format("YYYY年MM月DD日");
+//     }
+//   }
 };
 </script>
 
 <style>
-.el-carousel__item h3 {
+/* .el-carousel__item h3 {
   color: #475669;
   font-size: 18px;
   opacity: 0.75;
@@ -162,5 +172,10 @@ export default {
 
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
+}
+*/
+.el-carousel__container img {
+  width: 100%;
+  height: 100%;
 }
 </style>
