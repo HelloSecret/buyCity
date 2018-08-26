@@ -150,6 +150,7 @@ $(document).ready(function() {
 </script>
 
 <style>
+/* 全局样式代码 及jq导航栏插件代码 */
 @import url("./assets/statics/site/css/style.css");
 @import url("./assets/lib/css/style.css");
 

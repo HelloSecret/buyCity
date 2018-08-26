@@ -113,7 +113,7 @@
 
 <script>
 // 导入axios
-import axios from "axios";
+// import axios from "axios";
 // 导入moment
 // import moment from "moment";
 // 暴露出去
@@ -129,8 +129,8 @@ export default {
   },
   beforeCreate() {},
   created() {
-    axios
-      .get("http://47.106.148.205:8899/site/goods/gettopdata/goods")
+    this.$axios
+      .get("site/goods/gettopdata/goods")
       .then(response => {
         //  console.log(response)
         this.catelist = response.data.message.catelist;
@@ -140,8 +140,8 @@ export default {
         // console.log(this.sliderlist)
         // console.log(this.toplist)
       });
-    axios
-      .get("http://47.106.148.205:8899/site/goods/getgoodsgroup")
+    this.$axios
+      .get("site/goods/getgoodsgroup")
       .then(response => {
         //   console.log(response.data.message);
         this.productlist = response.data.message;

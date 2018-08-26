@@ -6,17 +6,27 @@ import VueRouter from "vue-router"
 import Index from './components/01.index.vue'
 import Detail from './components/02.productdetail.vue'
 
+// 插件连接
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import VueLazyload from 'vue-lazyload'
 import iView from 'iview'; 
 import 'iview/dist/styles/iview.css';
+// 放大镜
+import ProductZoomer from 'vue-product-zoomer'
+
+// 全局axios
+import axios from 'axios';
+axios.defaults.baseURL = 'http://47.106.148.205:8899';
+Vue.prototype.$axios=axios
 
 
 // 如果使用模块化机制编程，导入Vue和VueRouter，要调用 Vue.use(VueRouter)
-Vue.use(iView);
 Vue.use(VueRouter)
+Vue.use(ProductZoomer)
+Vue.use(iView);
 Vue.use(ElementUI);
+// 懒加载
 Vue.use(VueLazyload, {
   preLoad: 1.3,
   // error: 'dist/error.png',
