@@ -57,7 +57,7 @@
                                         <dd>
                                             <div id="buyButton" class="btn-buy">
                                                 <button onclick="cartAdd(this,'/',1,'/shopping.html');" class="buy">立即购买</button>
-                                                 <button @click="cartAdd" class="add">加入购物车</button>
+                                                <button @click="cartAdd" class="add">加入购物车</button>
                                             </div>
                                         </dd>
                                     </dl>
@@ -194,7 +194,7 @@
         methods: {
             // 这个是计数器的方法
             buyCountChange(value) {
-                console.log(value);
+                // console.log(value);
             },
             // 这个是渲染商品的方法（左侧列表 商品详情图片 放大镜图片）
             getProductDetail() {
@@ -280,6 +280,10 @@
             // 加入购物车的逻辑
             // 使用jq来实现
             cartAdd() {
+                if(this.buyCount==0){
+                    this.$Message.error("好歹买点东西吧，宝贝！");
+                    return;
+                }
                 // 获取加入购物车位置
                 let cartOffset = $('.add').offset();
                 // console.log(cartOffset);
@@ -293,7 +297,14 @@
                 });
                 // 动画完结以后
                 // 	隐藏图片
+
                 // 	增加购物车中的显示内容
+                //    this.$store.commit('increment',50)
+                // 调用增加商品的方法 需要商品的id  还有商品数量
+                this.$store.commit("addGoods", {
+                    goodId: this.productId,
+                    goodNum: this.buyCount,
+                });
             }
         },
         created() {
@@ -311,6 +322,10 @@
                 this.images.normal_size = [];
                 // 调用渲染页面方法
                 this.getProductDetail();
+                // 调用分页的方法
+                this.getComments();
+                // 商品变动后商品数量清0
+                this.buyCount=0;
             }
         }
     };
