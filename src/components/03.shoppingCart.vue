@@ -89,7 +89,8 @@
                                 <tr>
                                     <th align="right" colspan="8">
                                         已选择商品
-                                        <b class="red" id="totalQuantity">{{totalCount}}</b> 件 &nbsp;&nbsp;&nbsp; 商品总金额（不含运费）：
+                                        <b class="red" id="totalQuantity">{{totalCount}}</b> 件 &nbsp;&nbsp;&nbsp;
+                                        商品总金额（不含运费）：
                                         <span class="red">￥</span>
                                         <b class="red" id="totalAmount">{{totalPrice}}</b>元
                                     </th>
@@ -101,8 +102,10 @@
                     <!--购物车底部-->
                     <div class="cart-foot clearfix">
                         <div class="right-box">
-                            <button class="button" onclick="javascript:location.href='/index.html';">继续购物</button>
-                            <button class="submit" onclick="formSubmit(this, '/', '/shopping.html');">立即结算</button>
+                            <router-link to="/index">
+                                <button class="button">继续购物</button>
+                            </router-link>
+                            <button class="submit" @click="checkAndSubmit">立即结算</button>
                         </div>
                     </div>
                     <!--购物车底部-->
@@ -116,21 +119,22 @@
 
 <script>
     export default {
-        name: 'cart',
+        name: "cart",
         data: function () {
             return {
                 message: []
-            }
+            };
         },
         created() {
             // 取出共享的数组 拿到购物车商品的id及数量
-            let cartDate = this.$store.state.cartDate
+            let cartDate = this.$store.state.cartDate;
             // console.log(cartDate)
-            var ids = '';
+            var ids = "";
+            // 遍历这个对象 把对象的id对应的数量取出来 并用逗号拼接每一个id 得到一个id字符串
             for (const key in cartDate) {
-                // console.log(key); 
-                ids += key
-                ids += ","
+                // console.log(key);
+                ids += key;
+                ids += ",";
                 // console.log(ids);
             }
             // 去掉最后多余的逗号 第二个-1的意思是 最后一个 不要
@@ -149,8 +153,8 @@
                     // 设置是否被选中
                     v.selected = true;
                 });
-                this.message = res.data.message
-            })
+                this.message = res.data.message;
+            });
         },
         // 计算总价及总数量
         computed: {
@@ -172,7 +176,7 @@
                     // 只计算被选中的
                     if (v.selected == true) {
                         // 变为了字符串拼接 转化为整数即可
-                        totalCount += parseInt(v.buycount)
+                        totalCount += parseInt(v.buycount);
                     }
                 });
                 return totalCount;
@@ -185,7 +189,7 @@
                 this.$store.commit("updateGoodsNum", {
                     goodId: id,
                     goodNum: num
-                })
+                });
             },
             delOne(id) {
                 //  console.log(id);
@@ -196,9 +200,41 @@
                         this.message.splice(i, 1);
                     }
                 });
+            },
+            checkAndSubmit() {
+                // 判断是否有商品 
+                if (this.totalCount == 0) {
+                    // 没有则提示
+                    this.$Message.error('现在还没有可结算的商品哦');
+                    return;
+                }
+                // 到了这里就是有商品 带上商品id
+                let ids = '';
+                this.message.forEach(v => {
+                    if (v.selected == true) {
+                        ids += v.id;
+                        ids += ","
+                    }
+                })
+                // 去掉最后的逗号
+                ids = ids.slice(0, -1);
+                // 跳转到订单页面
+                this.$router.push(`/order/${ids}`);
+
+                // 这里使用全局守卫来判断
+                //有商品再判断是否登录
+                // this.$axios.get('site/account/islogin').then(res => {
+                //     // console.log(res);
+                //     // 如果没有登录 去登录页面
+                //     if (res.data.code == "nologin") {
+                //         this.$router.push('/login')
+                //     } else { //已登录 去结算页面
+                //         this.$router.push('/order')
+                //     }
+                // })
             }
         }
-    }
+    };
 </script>
 
 <style>
