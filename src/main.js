@@ -8,6 +8,7 @@ import Detail from './components/02.productdetail.vue'
 import shoppingCart from './components/03.shoppingCart.vue'
 import Login from './components/04.login.vue'
 import Order from './components/05.order.vue'
+import payOrder from './components/06.payOrder.vue'
 
 // 插件连接
 import ElementUI from 'element-ui';
@@ -94,7 +95,7 @@ const store = new Vuex.Store({
     changeLoginStatus(state, isLogin) {
       state.isLogin = isLogin
     },
-    // 
+    // 把上一个页面的路径保存到Vuex
     saveFromPath(state,fromPath){
       state.fromPath=fromPath
     }
@@ -143,7 +144,13 @@ let routes = [{
   },
   {
     path: '/order/:ids',
-    component: Order
+    component: Order,
+    meta: { checkLogin: true }
+  },
+  {
+    path: '/payorder/:orderid',
+    component: payOrder,
+    meta: { checkLogin: true }
   }
 ]
 
@@ -153,13 +160,16 @@ const router = new VueRouter({
 })
 
 // 路由守卫(去的地址，来的地址，放行)
+// 类似于中间件 只要页面跳转到另一个页面 就会经过这里
+// 在这里判断登录状态更加合理
 router.beforeEach((to, from, next) => {
   // 每次过来都保存一下来时的地址
   // 提交载荷 保存每一次从哪里来的地址
   store.commit('saveFromPath',from.path);
 
   // 先判断是否是订单页(order页面)
-  if (to.path.indexOf('/order/') != -1) {
+  //if (to.path.indexOf('/order/') != -1)
+  if(to.meta.checkLogin==true) {
     axios.get('site/account/islogin').then(res => {
       // console.log(res);
       // 再判断是否已经登录

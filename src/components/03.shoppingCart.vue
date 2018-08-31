@@ -185,7 +185,7 @@
         methods: {
             // 修改购物车商品之后同步顶部购物车的数据
             numChange(num, id) {
-                // 调用仓库的方法 (提交载荷)
+                // 调用仓库的方法 (提交载荷) 传入商品id 和数量
                 this.$store.commit("updateGoodsNum", {
                     goodId: id,
                     goodNum: num
@@ -193,6 +193,7 @@
             },
             delOne(id) {
                 //  console.log(id);
+                // 传入要删除商品的id
                 this.$store.commit("deleteGoods", id);
                 // 数据虽然删除了 但是页面中的没有删除
                 this.message.forEach((v, i) => {
