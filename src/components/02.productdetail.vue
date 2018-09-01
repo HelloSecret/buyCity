@@ -17,7 +17,8 @@
                                 <!--images.normal_size.length 有数据才渲染
                                   :base-images="images" 传递图片数据
                                   :base-zoomer-options 传递放大镜参数   -->
-                                <ProductZoomer v-if="images.normal_size.length!=0" :base-images="images" :base-zoomer-options="zoomerOptions"></ProductZoomer>
+                                <ProductZoomer v-if="images.normal_size.length!=0" :base-images="images"
+                                    :base-zoomer-options="zoomerOptions"></ProductZoomer>
                             </div>
                             <div class="goods-spec">
                                 <h1>{{goodsinfo.title}}</h1>
@@ -45,7 +46,8 @@
                                         <dt>购买数量</dt>
                                         <dd>
                                             <div class="stock-box">
-                                                <el-input-number size="mini" v-model="buyCount" @change="buyCountChange" :min="0" :max="goodsinfo.stock_quantity" label="描述文字"></el-input-number>
+                                                <el-input-number size="mini" v-model="buyCount" @change="buyCountChange"
+                                                    :min="0" :max="goodsinfo.stock_quantity" label="描述文字"></el-input-number>
                                             </div>
                                             <span class="stock-txt">
                                                 库存
@@ -88,11 +90,13 @@
                                         </div>
                                         <div class="conn-box">
                                             <div class="editor">
-                                                <textarea id="txtContent" v-model.trim="commentInfo" name="txtContent" sucmsg=" " datatype="*10-1000" nullmsg="请填写评论内容！"></textarea>
+                                                <textarea id="txtContent" v-model.trim="commentInfo" name="txtContent"
+                                                    sucmsg=" " datatype="*10-1000" nullmsg="请填写评论内容！"></textarea>
                                                 <span class="Validform_checktip"></span>
                                             </div>
                                             <div class="subcon">
-                                                <input id="btnSubmit" name="submit" type="submit" value="提交评论" class="submit" @click="submitCommit">
+                                                <input id="btnSubmit" name="submit" type="submit" value="提交评论" class="submit"
+                                                    @click="submitCommit">
                                                 <span class="Validform_checktip"></span>
                                             </div>
                                         </div>
@@ -116,7 +120,8 @@
                                     </ul>
                                     <div class="page-box" style="margin: 5px 0px 0px 62px;">
                                         <template>
-                                            <Page :total="totalCount" :page-size='5' show-elevator show-sizer placement="top" :page-size-opts="[5,10,15,20]" @on-page-size-change="pageSizeChange"
+                                            <Page :total="totalCount" :page-size='5' show-elevator show-sizer placement="top"
+                                                :page-size-opts="[5,10,15,20]" @on-page-size-change="pageSizeChange"
                                                 @on-change="pageChange" />
                                         </template>
                                     </div>
@@ -280,7 +285,7 @@
             // 加入购物车的逻辑
             // 使用jq来实现
             cartAdd() {
-                if(this.buyCount==0){
+                if (this.buyCount == 0) {
                     this.$Message.error("好歹买点东西吧，宝贝！");
                     return;
                 }
@@ -292,9 +297,16 @@
                 // console.log(targetOffset);
                 // 使用动画的方式 移动图片
                 // 移动到按钮位置 显示出来 动画移动到目标位置
-                $(".moveImg").show().css(cartOffset).animate(targetOffset, function () {
-                    $(this).hide();
-                });
+                $(".moveImg")
+                    .stop()
+                    .show()
+                    .addClass("move")
+                    .css(cartOffset)
+                    .animate(targetOffset, 1000, function () {
+                        $(this)
+                            .hide()
+                            .removeClass("move");
+                    });
                 // 动画完结以后
                 // 	隐藏图片
 
@@ -325,7 +337,7 @@
                 // 调用分页的方法
                 this.getComments();
                 // 商品变动后商品数量清0
-                this.buyCount=0;
+                this.buyCount = 0;
             }
         }
     };
@@ -345,31 +357,39 @@
 
     .pic-box {
         width: 395px;
+
         .control-box .thumb-list {
             display: flex;
             justify-content: center;
+
             img {
                 width: 80px;
                 height: 80px;
                 margin: 2px;
             }
         }
+
         .control {
             //   text-align:center;
             display: flex; // 主轴
             justify-content: center; // 纵轴 副轴 侧轴
             align-items: center;
         }
-    } // 移动图片的样式
+    }
+
+    // 移动图片的样式
+    // 移动图片的样式
     .moveImg {
         position: absolute;
         width: 50px;
-        display: none; // top:0;
+        //   display: none;
+        // top:0;
         // left:0;
     }
 
     .moveImg.move {
-        transition: all 1s;
-        transform: rotate(720deg);
+        transition: transform 1s, opacity 1s;
+        opacity: 0.5;
+        transform: scale(0.2) rotate(360deg);
     }
 </style>

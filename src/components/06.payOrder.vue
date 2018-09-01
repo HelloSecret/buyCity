@@ -61,17 +61,18 @@
                                     </div>
                                 </div>
                                 <div class="el-row">
-                                        <div class="el-col el-col-12">
-                                                <dl class="form-group">
-                                                    <dt>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</dt>
-                                                    <dd>{{message.message}}</dd>
-                                                </dl>
-                                            </div>
+                                    <div class="el-col el-col-12">
+                                        <dl class="form-group">
+                                            <dt>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</dt>
+                                            <dd>{{message.message}}</dd>
+                                        </dl>
+                                    </div>
                                 </div>
                             </div>
                             <div class="el-col el-col-6">
                                 <div id="container2">
-                                    <canvas width="300" height="300"></canvas>
+                                    <qrcode :value="'http://47.106.148.205:8899/site/validate/pay/alipay/'+$route.params.orderid"
+                                        :options="{ foreground: '#0275d8', size: 200 }"></qrcode>
                                 </div>
                             </div>
                         </div>
@@ -82,26 +83,48 @@
     </div>
 </template>
 <script>
-export default {
-    name:'payorder',
-    data:function(){
-        return {
-            message:[]
-        }
-    },
-    // 数据渲染
-    created() {
-        let id = this.$route.params.orderid
-        // console.log(id);
-        this.$axios.get(`site/validate/order/getorder/${id}`).then(res=>{
-            // console.log(res);
-            this.message = res.data.message[0]
-        })
-    },
-}
+// 导入二维码
+    import VueQrcode from '@xkeshi/vue-qrcode';
+    // Vue.component(VueQrcode.name, VueQrcode);
+    export default {
+        name: 'payorder',
+        // 引入局部组件
+        components: {
+            [VueQrcode.name]: VueQrcode
+        },
+        data: function () {
+            return {
+                message: []
+            }
+        },
+        // 数据渲染
+        created() {
+            let id = this.$route.params.orderid
+            // console.log(id);
+            // 页面渲染请求
+            this.$axios.get(`site/validate/order/getorder/${id}`).then(res => {
+                // console.log(res);
+                this.message = res.data.message[0]
+            })
+            // 支付请求 轮询方式 开启定时器 等到支付成功就停止
+            let timeId = setInterval(() => {
+                this.$axios.get(`site/validate/order/getorder/${id}`).then(res => {
+                    if (res.data.message[0].status == 2) {
+                        // 成功之后提示
+                        this.$Message.success('支付成功！')
+                        setTimeout(() => {
+                            // this.$router.push('/paySuccess') 
+                            // 带id跳转商品详情
+                            this.$router.push("/paySuccess/"+this.$route.params.orderid);
+                            // this.$router.push("/orderList");
+                        },500)
+                        clearInterval(timeId)
+                    }
+                })
+            }, 1000)
+        },
+    }
 </script>
 <style>
 
 </style>
-
-

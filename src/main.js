@@ -9,6 +9,10 @@ import shoppingCart from './components/03.shoppingCart.vue'
 import Login from './components/04.login.vue'
 import Order from './components/05.order.vue'
 import payOrder from './components/06.payOrder.vue'
+import paySuccess from './components/07.paySuccess.vue'
+import Vip from './components/08.vip.vue'
+import orderList from './components/09.orderList.vue'
+import orderDetail from './components/10.orderDetail'
 
 // 插件连接
 import ElementUI from 'element-ui';
@@ -44,9 +48,15 @@ Vue.use(VueLazyload, {
 // 注册全局过滤器 因为有多个页面需要重复使用
 // 依赖于 moment.js
 import moment from 'moment';
-// 注册
-Vue.filter('filterDate', function (val) {
-  return moment(val).format("YYYY年MM月DD日");
+// 过滤器 （日期格式）
+Vue.filter('filterDate', function (val,formatStr) {
+  // 如果有传参就按传参的格式去转换
+  if(formatStr!=undefined){
+    return moment(val).format(formatStr)
+  }else{
+    // 如果没有 就正常转换
+     return moment(val).format("YYYY年MM月DD日");
+  }
 })
 
 // 引入vuex
@@ -151,7 +161,27 @@ let routes = [{
     path: '/payorder/:orderid',
     component: payOrder,
     meta: { checkLogin: true }
-  }
+  },
+  {
+    path: '/paySuccess/:id',
+    component: paySuccess,
+    meta: { checkLogin: true }
+  },
+  {
+    path: '/vip',
+    component: Vip,
+    meta: { checkLogin: true }
+  },
+  {
+    path: '/orderList',
+    component: orderList,
+    meta: { checkLogin: true }
+  },
+  {
+    path: '/orderDetail/:id',
+    component: orderDetail,
+    meta: { checkLogin: true }
+  },
 ]
 
 // 创建路由实例
