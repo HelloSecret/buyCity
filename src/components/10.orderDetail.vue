@@ -224,7 +224,7 @@
             // 签收请求
             signExpress() {
                 this.$axios.get(`site/validate/order/complate/${this.$route.params.id}`).then(res => {
-                    console.log(res);
+                    // console.log(res);
                     if (res.data.status == 0) {
                         this.$Message.success("恭喜，已成功签收")
                         this.getgoodslist();

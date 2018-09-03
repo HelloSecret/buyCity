@@ -65,7 +65,7 @@
                                     <td>{{item.title}}</td>
                                     <td>{{item.sell_price}}</td>
                                     <td>
-                                        <el-input-number size="mini" v-model="item.buycount" :min="0" @change="numChange($event,item.id)"></el-input-number>
+                                        <el-input-number size="mini" v-model="item.buycount" :min="1" :max="item.max" @change="numChange($event,item.id)"></el-input-number>
                                     </td>
                                     <td>{{item.buycount*item.sell_price}}</td>
                                     <td>
@@ -152,6 +152,14 @@
                     // console.log(v)
                     // 设置是否被选中
                     v.selected = true;
+
+                    //数据不能大于库存  重新调用之前有库存的接口 获取之后保存
+                    // 带着这个id 去调用接口 即可
+                    this.$axios.get(`site/goods/getgoodsinfo/${v.id}`).then(resSon => {
+                        // console.log(resSon);
+                        // 把库存 保存到 当前循环的那个对象中即可
+                        v.max = resSon.data.message.goodsinfo.stock_quantity
+                    })
                 });
                 this.message = res.data.message;
             });
@@ -185,6 +193,14 @@
         methods: {
             // 修改购物车商品之后同步顶部购物车的数据
             numChange(num, id) {
+                // 判断如果大于库存 那么则等于库存
+                this.message.forEach(v => {
+                    if (v.id == id) {
+                        if (num > v.max) {
+                            num = v.max;
+                        }
+                    }
+                })
                 // 调用仓库的方法 (提交载荷) 传入商品id 和数量
                 this.$store.commit("updateGoodsNum", {
                     goodId: id,

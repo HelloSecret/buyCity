@@ -75,6 +75,7 @@
                                         :options="{ foreground: '#0275d8', size: 200 }"></qrcode>
                                 </div>
                             </div>
+                            <input type="button" value="跳转到支付页" @click="goPayOrder">
                         </div>
                     </div>
                 </div>
@@ -83,7 +84,7 @@
     </div>
 </template>
 <script>
-// 导入二维码
+    // 导入二维码
     import VueQrcode from '@xkeshi/vue-qrcode';
     // Vue.component(VueQrcode.name, VueQrcode);
     export default {
@@ -94,7 +95,8 @@
         },
         data: function () {
             return {
-                message: []
+                message: [],
+                timeId: null
             }
         },
         // 数据渲染
@@ -107,7 +109,7 @@
                 this.message = res.data.message[0]
             })
             // 支付请求 轮询方式 开启定时器 等到支付成功就停止
-            let timeId = setInterval(() => {
+            this.timeId = setInterval(() => {
                 this.$axios.get(`site/validate/order/getorder/${id}`).then(res => {
                     if (res.data.message[0].status == 2) {
                         // 成功之后提示
@@ -115,16 +117,31 @@
                         setTimeout(() => {
                             // this.$router.push('/paySuccess') 
                             // 带id跳转商品详情
-                            this.$router.push("/paySuccess/"+this.$route.params.orderid);
+                            this.$router.push("/paySuccess/" + this.$route.params.orderid);
                             // this.$router.push("/orderList");
-                        },500)
-                        clearInterval(timeId)
+                        }, 500)
+                        clearInterval(this.timeId)
                     }
                 })
             }, 1000)
         },
+        // 方法
+        methods: {
+            goPayOrder() {
+                //   直接跳转到这个页面 进行支付 不是用axios调用接口
+                // 直接打开一个新的窗口 完成支付
+                window.open(
+                    'http://47.106.148.205:8899/site/validate/pay/alipay/'+this.$route.params.orderid
+                );
+            }
+        },
+        destroyed() {
+            clearInterval(this.timeId);
+        }
     }
 </script>
 <style>
-
+.pay-order {
+  min-height: 750px;
+}
 </style>

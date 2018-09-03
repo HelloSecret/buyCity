@@ -69,13 +69,15 @@
                     if (res.data.status == 0) {
                         // 登录成功修改Vuex的登录属性
                         this.$store.commit("changeLoginStatus", true);
+                        // 跳回上一页面
                         this.$router.push(this.$store.state.fromPath);
+                        //  this.$router.go(-1); 调用编程式导航方法 直接跳转 不需要去vuex取值
                     }
                     // 结束加载动画
                     this.$Loading.finish();
                 }).catch(response => {
                     // 错误动画
-                    this.$Loading.error();
+                    this.$Loading.error(); 
                 })
             }
         }

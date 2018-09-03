@@ -42,21 +42,25 @@
         name: "paysuccess",
         data: function () {
             return {
-                num: 5
+                num: 5,
+                timeId:null
             }
         },
         // 支付成功之后开启倒计时 计时完毕跳转订单支付详情页面 并清除定时器
         mounted() {
-           let timeId=setInterval(() => {
+           this.timeId=setInterval(() => {
                 this.num--
                 if (this.num == 0) {
                     // this.$router.push('/vip');
                     this.$router.push('/orderDetail/'+this.$route.params.id);
                     // this.$router.push('/orderList');
-                    clearInterval(timeId);
+                    clearInterval(this.timeId);
                 }
             }, 1000)
-        }
+        },
+       destroyed(){
+            clearInterval(this.timeId);
+       } 
     }
 </script>
 <style>
